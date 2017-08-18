@@ -1,28 +1,34 @@
 import numpy as np
-i = 0
-while(1):
-	path_to_csv = "rightcsv/"+ input() + ".csv"
+for m in range(219):
+	s = input()
+	path_to_csv = "leftcsv/"+ s + ".csv"
 	data = np.genfromtxt(path_to_csv, dtype=None, delimiter=',', names=True)
-	#print(data["time"])
-	for j in data["motifs"]:
-		if(j.decode("utf-8") == 'A'):
-			print(j)
+		#print(data["time"])
+	#print(data)
+	#3for j in data["motifs"]:
+	#	if(j.decode("utf-8") == 'A'):
+	#		print(j)
 	#i += 1
 	beta_closure = 1.0 #A,H,E,G,J,K,L
 	beta_nonclosure = 10.0 #B,C,D,F,I,M,N,O,P
 	closures = ['A','H','E','G','J','K','L']
 	non_closrues = ['B','C','D','F','I','M','N','O','P']
 	l = len(data["time"])
+	if(l == 0):
+		continue
+	csvname = "leftmodel/"+ s + ".csv"
+	f = open(csvname,'a')
+	#print(l)
 	maxx = np.floor(data["time"][l-1]) + 1
 	effectvec = np.array([0.0]*16)
-	recent = np.array([0.0]*16)
+	recent = np.array([-float('inf')]*16)
 	#print(effectvec)
-	
+		
 	j = 2
 	time = data["time"][0]
 	#while(np.floor(time) > j):
 	#	j += 1
-	print("1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0")
+	f.write("1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0\n")
 	for i in range(int(l)):
 		#print(maxx)
 		motif = data["motifs"][i].decode("utf-8")
@@ -38,7 +44,7 @@ while(1):
 				effectvec = np.around(np.exp(effectvec),6)
 				lis = ','.join(map(str,effectvec))
 				lis = str(j) +','+ lis
-				print(lis)
+				f.write(lis + "\n")
 				#print(str(j))
 				j += 1
 		
@@ -52,6 +58,5 @@ while(1):
 	effectvec = np.around(np.exp(effectvec),6)
 	lis = ','.join(map(str,effectvec))
 	lis = str(j) +','+ lis
-	print(lis)
-
-	break
+	f.write(lis)
+	f.close()
